@@ -102,3 +102,20 @@ func (s *Struct[T]) Value() (driver.Value, error) {
 	}
 	return json.Marshal(s.Struct)
 }
+
+// Scan implements the Scanner interface.
+func (s *Struct[T]) Scan(value interface{}) error {
+	var err error
+	switch x := value.(type) {
+	case nil:
+		s.Valid = false
+		return nil
+	case []byte:
+		err = json.Unmarshal(x, &s.Struct)
+	default:
+		err = fmt.Errorf("null: cannot scan type %T into null.Struct: %v", value, value)
+	}
+
+	s.Valid = err == nil
+	return err
+}

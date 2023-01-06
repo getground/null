@@ -131,6 +131,18 @@ func TestStructValue(t *testing.T) {
 	}
 }
 
+func TestStructScan(t *testing.T) {
+	s := Struct[Dummy]{}
+	err := s.Scan([]byte(`{"value": 10}`))
+	maybePanic(err)
+	assertNullStruct(t, s, StructFrom(Dummy{Value: 10}))
+
+	s = Struct[Dummy]{}
+	err = s.Scan(nil)
+	maybePanic(err)
+	assertNullStruct(t, s, Struct[Dummy]{})
+}
+
 func assertStruct(t *testing.T, a Struct[Dummy], from Dummy) {
 	t.Helper()
 	if from.Value != a.Struct.Value {
