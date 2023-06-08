@@ -74,6 +74,14 @@ func TestUnmarshalJSON(t *testing.T) {
 		panic("err should not be nil")
 	}
 	assertNullStruct(t, si, StructFromPtr[Dummy](nil))
+
+	type customString string
+	var ss Struct[customString]
+	err = json.Unmarshal([]byte(`"hello"`), &ss)
+	maybePanic(err)
+	if ss.Struct != "hello" {
+		panic("should be hello")
+	}
 }
 
 func TestMarshalStruct(t *testing.T) {
@@ -87,6 +95,12 @@ func TestMarshalStruct(t *testing.T) {
 	data, err = json.Marshal(s)
 	maybePanic(err)
 	assertJSONEquals(t, data, `null`, "non-empty json marshal")
+
+	// String marshal
+	s2 := NewStruct("test", true)
+	data, err = json.Marshal(s2)
+	maybePanic(err)
+	assertJSONEquals(t, data, `"test"`, "non-empty json marshal")
 }
 
 func TestStructPtr(t *testing.T) {
