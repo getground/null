@@ -96,7 +96,7 @@ func (s *Struct[T]) IsZero() bool {
 }
 
 // Value implements the driver Valuer interface.
-func (s *Struct[T]) Value() (driver.Value, error) {
+func (s Struct[T]) Value() (driver.Value, error) {
 	if !s.Valid {
 		return nil, nil
 	}
