@@ -57,6 +57,8 @@ func (s *Struct[T]) UnmarshalJSON(data []byte) error {
 	switch v.(type) {
 	case map[string]interface{}:
 		err = json.Unmarshal(data, &s.Struct)
+	case string:
+		err = json.Unmarshal(data, &s.Struct)
 	case nil:
 		s.Valid = false
 		return nil
